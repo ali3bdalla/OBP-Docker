@@ -9,10 +9,14 @@ ADD OBP-Docker/api-explorer/API-Explorer.default.props /usr/src/API-Explorer/src
 RUN cp /usr/src/API-Explorer/pom.xml /tmp/pom.xml # For Packaging a local repository within the image
 WORKDIR /usr/src/API-Explorer
 RUN mvn package -DskipTests
-RUN mvn install -pl .,obp-commons
-RUN mvn install -DskipTests -pl obp-api
+# RUN mvn install -pl .,obp-commons
+# RUN mvn install -DskipTests -pl obp-api
 # Copy API Explorer source code
 # Copy build artifact (.war file) into jetty from 'maven' stage.
+RUN mkdir -p jetty/webapps
 RUN cp -rf /usr/src/API-Explorer/target/API_Explorer-1.0.war jetty/webapps/ROOT.war
+RUN apt update && apt dist-upgrade -y
+RUN apt install software-properties-common -y
+RUN add-apt-repository ppa:openjdk-r/ppa &&  apt-get update && apt-get install  openjdk-8-jdk && apt-get install ant  && apt-get clean
 WORKDIR jetty
 ENTRYPOINT ["java", "-jar", "start.jar"]
