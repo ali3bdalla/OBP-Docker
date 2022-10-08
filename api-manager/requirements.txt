@@ -1,11 +1,11 @@
-django>=2.2.10
+#Django==1.11.7
+Django==2.0.7
 oauthlib==2.0.0
-requests==2.20.0
+requests==2.11.1
 requests-oauthlib==0.6.2
 PyJWT==1.5.3
 gunicorn==19.6.0
 matplotlib
-django-bootstrap-datepicker-plus
+django-bootstrap-datepicker-plus==3.0.5
 django-mathfilters
 django-bootstrap3
-#psycopg2==2.7.3.1

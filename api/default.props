@@ -120,13 +120,13 @@ write_connector_metrics=true
 
 
 ## You can use a no config needed h2 database by setting db.driver=org.h2.Driver and not including db.url
-db.driver=org.h2.Driver
-db.url=jdbc:h2:./lift_proto.db;DB_CLOSE_ON_EXIT=FALSE
+#db.driver=org.h2.Driver
+#db.url=jdbc:h2:./lift_proto.db;DB_CLOSE_ON_EXIT=FALSE
 
 
 #If you want to use the postgres , be sure to create your database and update the line below!
-#db.driver=org.postgresql.Driver
-#db.url=jdbc:postgresql://localhost:5432/dbname?user=dbusername&password=thepassword
+db.driver=org.postgresql.Driver
+db.url=jdbc:postgresql://postgres:5432/postgres?user=postgres&password=postgres
 
 # If you want to use MySQL
 #db.url=jdbc:mysql://localhost:3306/OBP_DB1?user=obp_user_001&password=your-password-here&verifyServerCertificate=false&useSSL=true&serverTimezone=UTC&nullNamePatternMatchesAll=true
@@ -619,12 +619,12 @@ featured_apis=elasticSearchWarehouseV300
 # -- Migration Scripts ----------------------------
 # Enable/Disable execution of migration scripts.
 # In case isn't defined default value is "false"
-# migration_scripts.execute=false
+migration_scripts.execute=true
 # Define list of migration scripts to execute.
 # List is not ordered.
-# list_of_migration_scripts_to_execute=dummyScript
+list_of_migration_scripts_to_execute=dummyScript
 # Bypass the list and execute all available scripts
-# migration_scripts.execute_all=false
+migration_scripts.execute_all=false
 # -------------------------------------------------
 
 # -- Mapper rules -------------------------------

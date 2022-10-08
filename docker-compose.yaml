@@ -1,11 +1,25 @@
 version: "3.3"
 services:
-  api-explorer-scalejs-reach:
-    build:
-      context: ../
-      dockerfile: OBP-Docker/Dockerfile.api-explorer
+  postgres:
+    image: postgres:13
+    volumes:
+      - './tmp/db-2:/var/lib/postgresql'
+    ports:
+      - '5432:5432'
+    environment:
+      POSTGRES_USER: 'postgres'
+      POSTGRES_PASSWORD: 'postgres'
+      POSTGRES_DB: 'postgres'
     networks:
       - app
+  api-explorer-scalejs-reach:
+    build:
+      context: ./
+      dockerfile: Dockerfile.api-explorer
+    networks:
+      - app
+    volumes:
+      - "../API-Explorer:/usr/src/API-Explorer"
     ports:
       - 8082:8080
   api-manager-python:
@@ -19,8 +33,12 @@ services:
     ports:
       - 8000:8000
     environment:
-      OBP_MANAGER_API_HOST: http://localhost:8080
+      OBP_MANAGER_API_HOST: http://host.docker.internal:8080
+      OBP_MANAGER_SECRET_KEY: "change_me"
+      OBP_MANAGER_ALLOWED_HOST: "host.docker.internal"
   api-core-scala:
+    volumes:
+      - "../OBP-API:/usr/src/OBP-API"
     build:
       context: ../
       dockerfile: OBP-Docker/Dockerfile.obp-base

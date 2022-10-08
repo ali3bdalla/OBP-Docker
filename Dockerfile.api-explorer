@@ -2,33 +2,37 @@
 # It is a multi stage build, meaning a small-ish image is the end result. 
 
 FROM maven:3-jdk-8 as maven
-COPY ./API-Explorer /usr/src/API-Explorer
-ADD OBP-Docker/api-explorer/API-Explorer.default.props /usr/src/API-Explorer/src/main/resources/props/default.props
-RUN cp /usr/src/API-Explorer/pom.xml /tmp/pom.xml # For Packaging a local repository within the image
+# COPY ./API-Explorer /usr/src/API-Explorer
+# ADD OBP-Docker/api-explorer/API-Explorer.default.props /usr/src/API-Explorer/src/main/resources/props/default.props
+# RUN cp /usr/src/API-Explorer/pom.xml /tmp/pom.xml # For Packaging a local repository within the image
 WORKDIR /usr/src/API-Explorer
-RUN mvn package -DskipTests
+COPY ./scripts/run-api-explorer.sh /tmp/run-api-explorer.sh
+COPY ./api-explorer/API-Explorer.default.props /tmp/default.props
+RUN chmod 777 /tmp/run-api-explorer.sh
+CMD ["/bin/sh","-c","/tmp/run-api-explorer.sh"]
+# RUN mvn package -DskipTests
 # RUN mvn install -pl .,obp-commons
 # RUN mvn install -DskipTests -pl obp-api
 # Copy API Explorer source code
 # Copy build artifact (.war file) into jetty from 'maven' stage.
-FROM openjdk:8-jre-alpine
+# FROM openjdk:8-jre-alpine
 
-# Add user 
-RUN adduser -D obp
+# # Add user 
+# RUN adduser -D obp
 
-# Download jetty
-RUN wget -O - https://repo1.maven.org/maven2/org/eclipse/jetty/jetty-distribution/9.4.15.v20190215/jetty-distribution-9.4.15.v20190215.tar.gz | tar zx
-RUN mv jetty-distribution-* jetty
+# # Download jetty
+# RUN wget -O - https://repo1.maven.org/maven2/org/eclipse/jetty/jetty-distribution/9.4.15.v20190215/jetty-distribution-9.4.15.v20190215.tar.gz | tar zx
+# RUN mv jetty-distribution-* jetty
 
-# Copy API Explorer source code
-# Copy build artifact (.war file) into jetty from 'maven' stage.
-COPY --from=maven /usr/src/API-Explorer/target/API_Explorer-1.0.war jetty/webapps/ROOT.war
+# # Copy API Explorer source code
+# # Copy build artifact (.war file) into jetty from 'maven' stage.
+# COPY --from=maven /usr/src/API-Explorer/target/API_Explorer-1.0.war jetty/webapps/ROOT.war
 
-WORKDIR jetty
-RUN chown -R  obp /jetty
+# WORKDIR jetty
+# RUN chown -R  obp /jetty
 
-# Switch to the obp user (non root)
-USER obp
+# # Switch to the obp user (non root)
+# USER obp
 
-# Starts jetty
-ENTRYPOINT ["java", "-jar", "start.jar"]
+# # Starts jetty
+# ENTRYPOINT ["java", "-jar", "start.jar"]
