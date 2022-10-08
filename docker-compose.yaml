@@ -3,7 +3,7 @@ services:
   postgres:
     image: postgres:13
     volumes:
-      - './tmp/db-2:/var/lib/postgresql'
+      - 'db-vol:/var/lib/postgresql'
     ports:
       - '5432:5432'
     environment:
@@ -48,3 +48,5 @@ services:
       - 8080:8080
 networks:
   app:
+volumes:
+  db-vol:
